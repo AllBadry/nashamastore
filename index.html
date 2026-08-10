@@ -1,13 +1,64 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- إعدادات العرض الأساسية -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+    <meta name="theme-color" content="#dc2626" /> <!-- لون شريط المتصفح في الهواتف (أحمر نشامى) -->
+    
+    <!-- أيقونات الموقع (Favicon) -->
+    <link rel="icon" type="image/svg+xml" href="/NHSSR.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- ========================================== -->
+    <!-- السيو الأساسي (Basic SEO) -->
+    <!-- ========================================== -->
+    <title>نشامى ستور | الوجهة الأولى للهواتف الذكية والإكسسوارات في الأردن</title>
+    <meta name="description" content="تسوق أحدث الهواتف الذكية، الساعات، والإكسسوارات الأصلية من نشامى ستور في الأردن. أفضل الأسعار، كفالة الوكيل الرسمي، وتوصيل سريع لكافة المحافظات." />
+    <meta name="keywords" content="هواتف ذكية, آيفون, سامسونج, ساعات ذكية, إكسسوارات موبايل, شراء هواتف الأردن, نشامى ستور, كفالة الوكيل" />
+    <meta name="author" content="Nashama Store" />
+    
+    <!-- الرابط الأساسي (Canonical) لمنع عقوبة تكرار المحتوى من جوجل -->
+    <link rel="canonical" href="https://nashamastore.com/" />
+
+    <!-- ========================================== -->
+    <!-- وسوم أوبن جراف (Open Graph) - للفيسبوك والواتساب -->
+    <!-- ========================================== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nashamastore.com/" />
+    <meta property="og:site_name" content="نشامى ستور" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:title" content="نشامى ستور | أقوى عروض الهواتف في الأردن" />
+    <meta property="og:description" content="اكتشف أحدث الأجهزة الذكية والإكسسوارات الأصلية بأسعار لا تقبل المنافسة. تسوق الآن واستفد من التوصيل السريع." />
+    <!-- الصورة التي ستظهر عند إرسال الرابط في واتساب أو فيسبوك -->
+    <meta property="og:image" content="https://nashamastore.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="عروض نشامى ستور للهواتف الذكية" />
+
+    <!-- ========================================== -->
+    <!-- وسوم تويتر (Twitter Cards) - لمنصة X -->
+    <!-- ========================================== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://nashamastore.com/" />
+    <meta name="twitter:title" content="نشامى ستور | أقوى عروض الهواتف في الأردن" />
+    <meta name="twitter:description" content="اكتشف أحدث الأجهزة الذكية والإكسسوارات الأصلية بأسعار لا تقبل المنافسة. تسوق الآن واستفد من التوصيل السريع." />
+    <meta name="twitter:image" content="https://nashamastore.com/og-image.jpg" />
+
+    <!-- ========================================== -->
+    <!-- تسريع الاتصال (Preconnect) للخطوط والباك اند -->
+    <!-- ========================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.action.jo" crossorigin />
+
   </head>
-  <body>
+  <body class="antialiased bg-gray-50 text-gray-900">
+    <noscript>يجب تفعيل الجافاسكربت (JavaScript) لتتمكن من تصفح متجر نشامى ستور.</noscript>
+    
     <div id="root"></div>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
