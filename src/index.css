@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* دخول ناعم من الأسفل */
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* دخول الصفحة عند التنقّل */
+  --animate-page-in: page-in 0.5s ease-out both;
+  /* ظهور تدريجي */
+  --animate-fade-in: fade-in 0.9s ease-out both;
+  /* دخول بطاقات المنتجات مع انزلاق خفيف */
+  --animate-card-in: card-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* تكبير ناعم */
+  --animate-scale-in: scale-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* طفو هادئ */
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+  /* وميض ترحيبي */
+  --animate-glow: glow 2.5s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.35); }
+    50% { box-shadow: 0 0 45px rgba(220, 38, 38, 0.65); }
+  }
+}
+
+body {
+  direction: rtl;
+  text-align: right;
+  background-color: #f3f4f6;
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* احترام تفضيل تقليل الحركة في النظام */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* Styling for product description (HTML from API) */
+.prose-description {
+  color: #52525b;
+  line-height: 1.9;
+  font-size: 0.95rem;
+}
+.prose-description ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.prose-description ul li {
+  position: relative;
+  padding-right: 1.5rem;
+}
+.prose-description ul li::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0.5rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: #dc2626;
+}
+.prose-description p {
+  margin: 0;
+}
+.prose-description strong {
+  color: #262626;
+  font-weight: 700;
+}
