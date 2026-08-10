@@ -3,14 +3,22 @@ name: Deploy Nashama Store to GitHub Pages
 on:
   push:
     branches:
-      - main # الروبوت سيعمل فقط عند رفع كود جديد على فرع main
+      - main # العمل فقط على الفرع الرئيسي
+
+# إعطاء الصلاحيات اللازمة للروبوت للرفع المباشر
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# منع تشغيل أكثر من عملية رفع في نفس الوقت
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # إعطاء صلاحية للروبوت للكتابة ورفع الملفات
-
     steps:
       - name: Checkout Code 🛎️
         uses: actions/checkout@v4
@@ -18,7 +26,7 @@ jobs:
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v4
         with:
-          node-version: "20" # يفضل استخدام الإصدار 20 لأنه الأكثر استقراراً حالياً (LTS)
+          node-version: "20"
 
       - name: Install Dependencies 📦
         run: npm install --legacy-peer-deps
@@ -27,13 +35,11 @@ jobs:
         run: |
           npm run build
 
-          # 🌟 خدعة الـ SPA الأساسية لـ GitHub Pages (تلتقط أي مسار ديناميكي مثل /product/iphone)
+          # خدعة الـ SPA الأساسية
           cp dist/index.html dist/404.html
 
-          # 🌟 خدعة الـ SEO: إنشاء مجلدات تتطابق مع مسارات App.jsx لمتجر نشامى
+          # خدعة الـ SEO لمتجر نشامى
           mkdir -p dist/search dist/offers dist/trends dist/category dist/brands dist/product dist/return-policy dist/service-usage
-
-          # نسخ ملف React الأساسي لكي يعيد غيت هاب الرمز 200 OK لمحركات البحث
           cp dist/index.html dist/search/index.html
           cp dist/index.html dist/offers/index.html
           cp dist/index.html dist/trends/index.html
@@ -43,9 +49,24 @@ jobs:
           cp dist/index.html dist/return-policy/index.html
           cp dist/index.html dist/service-usage/index.html
 
-      - name: Deploy to GitHub Pages 🚀
-        uses: peaceiris/actions-gh-pages@v4
+          # إضافة النطاق المخصص (CNAME)
+          echo "nashamastore.com" > dist/CNAME
+
+      - name: Setup Pages 🔧
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact 📤
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # المجلد الذي يتم توليده بعد البناء
-          cname: nashamastore.com # النطاق المخصص للمتجر
+          path: "./dist" # رفع مجلد البناء فقط كحزمة واحدة
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4
