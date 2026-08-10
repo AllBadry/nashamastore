@@ -1,0 +1,51 @@
+name: Deploy Nashama Store to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # الروبوت سيعمل فقط عند رفع كود جديد على فرع main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # إعطاء صلاحية للروبوت للكتابة ورفع الملفات
+
+    steps:
+      - name: Checkout Code 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20" # يفضل استخدام الإصدار 20 لأنه الأكثر استقراراً حالياً (LTS)
+
+      - name: Install Dependencies 📦
+        run: npm install --legacy-peer-deps
+
+      - name: Build Project 🏗️
+        run: |
+          npm run build
+
+          # 🌟 خدعة الـ SPA الأساسية لـ GitHub Pages (تلتقط أي مسار ديناميكي مثل /product/iphone)
+          cp dist/index.html dist/404.html
+
+          # 🌟 خدعة الـ SEO: إنشاء مجلدات تتطابق مع مسارات App.jsx لمتجر نشامى
+          mkdir -p dist/search dist/offers dist/trends dist/category dist/brands dist/product dist/return-policy dist/service-usage
+
+          # نسخ ملف React الأساسي لكي يعيد غيت هاب الرمز 200 OK لمحركات البحث
+          cp dist/index.html dist/search/index.html
+          cp dist/index.html dist/offers/index.html
+          cp dist/index.html dist/trends/index.html
+          cp dist/index.html dist/category/index.html
+          cp dist/index.html dist/brands/index.html
+          cp dist/index.html dist/product/index.html
+          cp dist/index.html dist/return-policy/index.html
+          cp dist/index.html dist/service-usage/index.html
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # المجلد الذي يتم توليده بعد البناء
+          cname: nashamastore.com # النطاق المخصص للمتجر
