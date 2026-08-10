@@ -1,6 +1,9 @@
 // الـ API الخاص بالمصادقة في نشامى ستور
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.nashamastore.com/api';
 
+// المفتاح السري للـ API (اختياري: يُرسل فقط إن تم ضبطه)
+const API_KEY = import.meta.env.VITE_STORE_SECRET_KEY || '';
+
 const TOKEN_KEY = 'nashamastore_token';
 
 function getToken() {
@@ -14,6 +17,7 @@ function setToken(token) {
 
 async function authRequest(path, { method = 'GET', body, withToken = true } = {}) {
   const headers = { 'Content-Type': 'application/json' };
+  if (API_KEY) headers['x-api-key'] = API_KEY;
   if (withToken) {
     const token = getToken();
     if (token) headers.Authorization = `Bearer ${token}`;

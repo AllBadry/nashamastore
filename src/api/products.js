@@ -3,8 +3,14 @@
 // في الإنتاج نستخدم VITE_API_URL أو الـ API البعيد افتراضياً
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '/api' : 'https://api.nashamastore.com/api');
 
+// المفتاح السري للـ API (اختياري: يُرسل فقط إن تم ضبطه)
+const API_KEY = import.meta.env.VITE_STORE_SECRET_KEY || '';
+
 async function request(path) {
-  const res = await fetch(`${API_URL}${path}`);
+  const headers = {};
+  if (API_KEY) headers['x-api-key'] = API_KEY;
+
+  const res = await fetch(`${API_URL}${path}`, { headers });
   if (!res.ok) {
     throw new Error(`فشل الطلب (${res.status})`);
   }
