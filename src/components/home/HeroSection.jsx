@@ -15,43 +15,43 @@ const STATIC_SLIDES = [
   {
     id: 's1',
     badge: 'عرض اليوم',
-    title: 'Realme C51',
+    title: 'Apple AirPods Max',
     highlight: 'خصم 45%',
-    description: 'هاتف ذكي بشاشة كبيرة وبطارية تدوم طوال اليوم بأفضل سعر.',
+    description: 'تجربة صوت فاخرة مع عزل ضوضاء نشط وجودة صوتية عالية.',
     buttonText: 'اشترِ الآن',
     link: '/products',
-    image: 'https://cdn.dummyjson.com/products/images/mobile-accessories/Realme%20X%20OEM%20Case%20Orange/1.png',
-    price: 79,
-    oldPrice: 109,
-    discount: 28,
+    image: 'https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/1.webp',
+    price: 349,
+    oldPrice: 549,
+    discount: 36,
     bgColor: 'bg-slate-100',
   },
   {
     id: 's2',
     badge: 'عرض محدود',
-    title: 'Samsung Galaxy Buds',
+    title: 'Apple Watch Series 4',
     highlight: 'خصم 30%',
-    description: 'سماعات لاسلكية بجودة صوت نقية وعزل ضوضاء مذهل.',
+    description: 'ساعة ذكية أنيقة بتتبع اللياقة والنوم وشاشة ريتينا رائعة.',
     buttonText: 'اشترِ الآن',
     link: '/products',
-    image: 'https://cdn.dummyjson.com/products/images/mobile-accessories/Samsung%20Universe%20Bud.png',
-    price: 89,
-    oldPrice: 119,
-    discount: 25,
+    image: 'https://cdn.dummyjson.com/product-images/mobile-accessories/apple-watch-series-4-gold/1.webp',
+    price: 245,
+    oldPrice: 349,
+    discount: 30,
     bgColor: 'bg-amber-50',
   },
   {
     id: 's3',
     badge: 'خيار المميزين',
-    title: 'Huawei FreeBuds Pro',
+    title: 'Apple AirPower',
     highlight: 'خصم 25%',
-    description: 'تجربة صوت فاخرة مع تصميم مريح وأنيق لفترة محدودة.',
+    description: 'شاحن لاسلكي يشحن أجهزتك بسهولة تامة دون أسلاك.',
     buttonText: 'اشترِ الآن',
     link: '/products',
-    image: 'https://cdn.dummyjson.com/products/images/mobile-accessories/Huawei%20FreeBuds%20Pro%202/1.png',
-    price: 149,
-    oldPrice: 179,
-    discount: 17,
+    image: 'https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/1.webp',
+    price: 59,
+    oldPrice: 79,
+    discount: 25,
     bgColor: 'bg-red-50',
   },
 ];
@@ -60,6 +60,12 @@ export default function HeroSection() {
   const [slides, setSlides] = useState(STATIC_SLIDES);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  // إعادة تعيين حالة خطأ الصورة عند تغيير الشريحة
+  useEffect(() => {
+    setImgError(false);
+  }, [currentIndex, slides]);
 
   // محاولة جلب عروض حقيقية، مع الإبقاء على الشرائح الأساسية إن فشل الطلب
   useEffect(() => {
@@ -138,7 +144,7 @@ export default function HeroSection() {
     [slides, currentIndex]
   );
 
-  const hasImage = Boolean(slide.image);
+  const hasImage = Boolean(slide.image) && !imgError;
 
   return (
     <div className="relative w-full min-h-[58vh] md:min-h-[62vh] bg-neutral-950 text-white rounded-[2.5rem] overflow-hidden shadow-2xl flex items-center mt-6 border border-neutral-800">
@@ -270,12 +276,18 @@ export default function HeroSection() {
             {/* كتلة المسح السوداء التي تنزل من فوق الصورة */}
             <div className={`revealer-image ${isAnimating ? 'animate-wipe-image' : ''}`}></div>
 
-            {hasImage && (
+            {hasImage ? (
               <img
                 src={slide.image}
                 alt={slide.title}
+                onError={() => setImgError(true)}
                 className={`w-full h-full object-contain relative z-10 drop-shadow-2xl mix-blend-multiply ${isAnimating ? 'animate-content' : ''}`}
               />
+            ) : (
+              <div className={`relative z-10 flex flex-col items-center gap-3 text-red-500 ${isAnimating ? 'animate-content' : ''}`}>
+                <Sparkles size={72} strokeWidth={1.2} />
+                <span className="text-neutral-400 text-sm font-bold">أفضل الصفقات بانتظارك</span>
+              </div>
             )}
 
             {/* تفاصيل صغيرة أسفل الصورة */}
