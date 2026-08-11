@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, MapPin, Phone, User, Banknote, CreditCard, CalendarClock,
   Loader2, ShoppingBag, CheckCircle2, AlertCircle, Truck, Package,
@@ -129,7 +130,7 @@ export default function CheckoutModal({ open, items = [], fromCart = false, onCl
     onCreated?.(order);
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div
         className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
@@ -404,6 +405,7 @@ export default function CheckoutModal({ open, items = [], fromCart = false, onCl
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

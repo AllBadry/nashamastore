@@ -13,6 +13,9 @@ export const useAuthStore = create((set, get) => ({
   cart: [],
   cartCount: 0,
   cartTotal: 0,
+  wishlist: [],
+  wishlistIds: [],
+  wishlistLoaded: false,
 
   // استرجاع الجلسة عند تحميل التطبيق (من التوكن المخزّن)
   restoreSession: async () => {
@@ -24,24 +27,24 @@ export const useAuthStore = create((set, get) => ({
     try {
       const user = await authApi.getMe();
       set({ user, isLoggedIn: true, loading: false });
-      await get().fetchCart();
+      await Promise.all([get().fetchCart(), get().fetchWishlist()]);
     } catch {
       authApi.setToken(null);
-      set({ user: null, isLoggedIn: false, cart: [], cartCount: 0, cartTotal: 0, loading: false });
+      set({ user: null, isLoggedIn: false, cart: [], cartCount: 0, cartTotal: 0, wishlist: [], wishlistIds: [], loading: false });
     }
   },
 
   login: async ({ email, password }) => {
     const user = await authApi.login({ email, password });
     set({ user, isLoggedIn: true });
-    await get().fetchCart();
+    await Promise.all([get().fetchCart(), get().fetchWishlist()]);
     return user;
   },
 
   signup: async (data) => {
     const user = await authApi.signup(data);
     set({ user, isLoggedIn: true });
-    await get().fetchCart();
+    await Promise.all([get().fetchCart(), get().fetchWishlist()]);
     return user;
   },
 
@@ -49,7 +52,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       await authApi.logout();
     } finally {
-      set({ user: null, isLoggedIn: false, cart: [], cartCount: 0, cartTotal: 0 });
+      set({ user: null, isLoggedIn: false, cart: [], cartCount: 0, cartTotal: 0, wishlist: [], wishlistIds: [], wishlistLoaded: false });
       useOrdersStore.getState().reset();
     }
   },
@@ -95,5 +98,28 @@ export const useAuthStore = create((set, get) => ({
   clearCart: async () => {
     await authApi.clearCart();
     get().applyCart([]);
+  },
+
+  // المفضلة: قائمة productId للعرض
+  applyWishlist: (items) => set({
+    wishlist: items || [],
+    wishlistIds: (items || []).map((item) => item.productId),
+    wishlistLoaded: true,
+  }),
+
+  fetchWishlist: async () => {
+    try {
+      const wishlist = await authApi.getWishlist();
+      get().applyWishlist(wishlist);
+      return wishlist;
+    } catch {
+      return get().wishlist;
+    }
+  },
+
+  toggleWishlist: async (productId) => {
+    const wishlist = await authApi.toggleWishlist(productId);
+    get().applyWishlist(wishlist);
+    return wishlist;
   },
 }));

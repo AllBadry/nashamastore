@@ -6,10 +6,12 @@ import { useAuthStore } from '../../store/authStore';
 export default function ProductCard({ product }) {
   const { name, slug, brand, variance, media, image, price: mappedPrice } = product;
   const navigate = useNavigate();
-  const { isLoggedIn, addToCart } = useAuthStore();
+  const { isLoggedIn, addToCart, wishlistIds, toggleWishlist } = useAuthStore();
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [addError, setAddError] = useState('');
+  const [wishAdding, setWishAdding] = useState(false);
+  const isWishlisted = wishlistIds.includes(product?.id);
   // يدعم الشكلين: المنتج الخام (media/variance) أو المحوَّل بـ mapProduct (image/price)
   const coverImage = media?.cover?.[0]?.preview || media?.gallery?.[0]?.preview || image || 'https://placehold.co/400x400/f5f5f5/a3a3a3?text=No+Image';
   const price = variance?.stock?.price?.value ?? mappedPrice ?? 0;
@@ -33,6 +35,23 @@ export default function ProductCard({ product }) {
       setAddError(err.message || 'تعذرت الإضافة إلى السلة');
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!product?.id) return;
+    setAddError('');
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    setWishAdding(true);
+    try {
+      await toggleWishlist(product.id);
+    } catch (err) {
+      setAddError(err.message || 'تعذر تحديث المفضلة');
+    } finally {
+      setWishAdding(false);
     }
   };
 
@@ -122,8 +141,18 @@ export default function ProductCard({ product }) {
             <button type="button" onClick={() => navigate(`/product/${slug}`)} className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="نظرة سريعة">
               <Eye size={18} />
             </button>
-            <button className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="إضافة للمفضلة">
-              <Heart size={18} />
+            <button
+              type="button"
+              onClick={handleToggleWishlist}
+              disabled={wishAdding}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed ${isWishlisted ? 'bg-red-600 text-white' : 'bg-white text-black hover:bg-red-600 hover:text-white'}`}
+              title={isWishlisted ? 'إزالة من المفضلة' : 'إضافة للمفضلة'}
+            >
+              {wishAdding ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Heart size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
+              )}
             </button>
           </div>
         </div>
