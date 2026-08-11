@@ -25,6 +25,9 @@ import Profile from './pages/Profile';
 // استدعاء صفحة السلة
 import Cart from './pages/Cart';
 
+// استدعاء صفحة المفضلة
+import Wishlist from './pages/Wishlist';
+
 // استدعاء الصفحات الثابتة
 import ReturnPolicy from './pages/static/ReturnPolicy';
 import Terms from './pages/static/Terms';
@@ -82,6 +85,9 @@ function App() {
 
               {/* مسار السلة */}
               <Route path="/cart" element={<Cart />} />
+
+              {/* مسار المفضلة */}
+              <Route path="/wishlist" element={<Wishlist />} />
 
               {/* مسارات الصفحات الثابتة */}
               <Route path="/return-policy" element={<ReturnPolicy />} />

@@ -47,3 +47,9 @@ export function getProducts({ category, categories, brand, q, offer, limit = 20,
 export function getProductBySlug(slug) {
   return request(`/products/${slug}`).then((r) => r.data);
 }
+
+// جلب منتجات محددة حسب معرّفاتها (لصفحة المفضلة)
+export function getProductsByIds(ids) {
+  if (!ids || !ids.length) return Promise.resolve([]);
+  return request(`/products/ids?ids=${ids.join(',')}`).then((r) => r.data);
+}

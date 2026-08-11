@@ -12,7 +12,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { user, isLoggedIn, loading, cartCount, cartTotal, logout } = useAuthStore();
+  const { user, isLoggedIn, loading, cartCount, cartTotal, wishlistIds, logout } = useAuthStore();
   const navigate = useNavigate();
   const searchInputRef = useRef(null);
 
@@ -119,9 +119,16 @@ export default function Navbar() {
               <Search size={22} strokeWidth={1.5} />
             </button>
 
-            <button className="hidden md:flex flex-col items-center hover:text-red-500 transition-colors group">
-              <Heart size={22} strokeWidth={1.5} className="group-hover:fill-red-50 transition-all" />
-            </button>
+            <Link to="/wishlist" className="relative hidden md:flex flex-col items-center hover:text-red-500 transition-colors group" title="المفضلة">
+              <div className="relative">
+                <Heart size={22} strokeWidth={1.5} className="group-hover:fill-red-50 transition-all" />
+                {wishlistIds.length > 0 && (
+                  <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
+                    {wishlistIds.length > 9 ? '9+' : wishlistIds.length}
+                  </span>
+                )}
+              </div>
+            </Link>
             
             {loading ? (
               <span className="w-9 h-9 rounded-full bg-slate-100 animate-pulse" title="..."></span>
@@ -311,6 +318,17 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link to="/wishlist" className="flex items-center gap-3 p-3.5 rounded-2xl hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <div className="text-slate-400"><Heart size={18} /></div>
+                <span>قائمة المفضلة</span>
+                {wishlistIds.length > 0 && (
+                  <span className="mr-auto text-[10px] font-black text-white bg-red-500 w-5 h-5 flex items-center justify-center rounded-full">
+                    {wishlistIds.length > 9 ? '9+' : wishlistIds.length}
+                  </span>
+                )}
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
