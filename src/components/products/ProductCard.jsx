@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart, Eye } from 'lucide-react';
 
 export default function ProductCard({ product }) {
-  const { name, slug, brand, variance, media } = product;
-  const coverImage = media?.cover?.[0]?.preview || media?.gallery?.[0]?.preview || 'https://placehold.co/400x400/f5f5f5/a3a3a3?text=No+Image';
-  const price = variance?.stock?.price?.value || 0;
+  const { name, slug, brand, variance, media, image, price: mappedPrice } = product;
+  // يدعم الشكلين: المنتج الخام (media/variance) أو المحوَّل بـ mapProduct (image/price)
+  const coverImage = media?.cover?.[0]?.preview || media?.gallery?.[0]?.preview || image || 'https://placehold.co/400x400/f5f5f5/a3a3a3?text=No+Image';
+  const price = variance?.stock?.price?.value ?? mappedPrice ?? 0;
   const currency = variance?.stock?.price?.symbol || 'JOD';
-  const brandName = brand?.name || '';
+  const brandName = brand?.name || brand || '';
 
   // خوارزمية الـ 3D Hover Tilt واللمعان
   const cardRef = useRef(null);
