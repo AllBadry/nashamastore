@@ -109,7 +109,7 @@ export default function Navbar() {
           </div>
 
           {/* أيقونات المستخدم والسلة - خطوط رفيعة وأنيقة */}
-          <div className="flex items-center gap-5 md:gap-6 text-slate-700 z-50">
+          <div className="flex items-center gap-3 md:gap-6 text-slate-700 z-50">
             {/* زر البحث (يظهر على جميع الشاشات) */}
             <button
               onClick={openSearch}

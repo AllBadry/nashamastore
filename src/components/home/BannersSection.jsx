@@ -63,7 +63,7 @@ export default function BannersSection() {
     <section ref={sectionRef} className="py-24 overflow-hidden bg-neutral-50 relative">
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[500px]" style={{ perspective: '1200px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 lg:min-h-[500px]" style={{ perspective: '1200px' }}>
           
           {/* ======================================= */}
           {/* البنر الأول */}

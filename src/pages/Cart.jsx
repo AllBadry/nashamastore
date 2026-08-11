@@ -171,78 +171,82 @@ export default function Cart() {
         {/* عناصر السلة */}
         <div className="lg:col-span-2 space-y-3">
           {cart.map((item) => (
-            <div key={item.productId} className="bg-white rounded-2xl border border-neutral-100 p-4 flex items-center gap-4">
-              <Link
-                to={`/product/${item.slug}`}
-                className="w-20 h-20 shrink-0 rounded-xl bg-neutral-50 border border-neutral-100 overflow-hidden flex items-center justify-center"
-              >
-                {item.image ? (
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                ) : (
-                  <Package size={24} className="text-neutral-300" />
-                )}
-              </Link>
-
-              <div className="flex-1 min-w-0">
+            <div key={item.productId} className="bg-white rounded-2xl border border-neutral-100 p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
                 <Link
                   to={`/product/${item.slug}`}
-                  className="block text-sm font-bold text-neutral-900 hover:text-red-600 transition-colors line-clamp-2"
+                  className="w-20 h-20 shrink-0 rounded-xl bg-neutral-50 border border-neutral-100 overflow-hidden flex items-center justify-center"
                 >
-                  {item.name}
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Package size={24} className="text-neutral-300" />
+                  )}
                 </Link>
-                <span className="text-[11px] font-bold text-red-500">{item.brand}</span>
 
-                <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                  {item.isOffer && item.oldPrice > 0 && (
-                    <span className="text-xs text-neutral-400 line-through font-medium">
-                      {formatPrice(item.oldPrice)}
-                    </span>
-                  )}
-                  <span className="text-base font-black text-neutral-900">{formatPrice(item.price)}</span>
-                  {!item.available && (
-                    <span className="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 rounded-full px-2 py-0.5">
-                      غير متوفر
-                    </span>
-                  )}
+                <div className="flex-1 min-w-0">
+                  <Link
+                    to={`/product/${item.slug}`}
+                    className="block text-sm font-bold text-neutral-900 hover:text-red-600 transition-colors line-clamp-2"
+                  >
+                    {item.name}
+                  </Link>
+                  <span className="text-[11px] font-bold text-red-500">{item.brand}</span>
+
+                  <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                    {item.isOffer && item.oldPrice > 0 && (
+                      <span className="text-xs text-neutral-400 line-through font-medium">
+                        {formatPrice(item.oldPrice)}
+                      </span>
+                    )}
+                    <span className="text-base font-black text-neutral-900">{formatPrice(item.price)}</span>
+                    {!item.available && (
+                      <span className="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 rounded-full px-2 py-0.5">
+                        غير متوفر
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* التحكم بالكمية */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
-                <div className="flex items-center border border-neutral-200 rounded-full overflow-hidden">
+              {/* التحكم بالكمية والإجمالي */}
+              <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 border-neutral-100 pt-3 sm:pt-0">
+                <div className="flex flex-row items-center gap-3 shrink-0">
+                  <div className="flex items-center border border-neutral-200 rounded-full overflow-hidden">
+                    <button
+                      onClick={() => changeQuantity(item, item.quantity - 1)}
+                      disabled={updating === item.productId || item.quantity <= 1}
+                      className="w-8 h-8 flex items-center justify-center text-neutral-600 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30"
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <span className="w-8 text-center font-black text-neutral-900 text-sm">
+                      {updating === item.productId ? <Loader2 size={14} className="animate-spin mx-auto" /> : item.quantity}
+                    </span>
+                    <button
+                      onClick={() => changeQuantity(item, item.quantity + 1)}
+                      disabled={updating === item.productId || item.quantity >= 50}
+                      className="w-8 h-8 flex items-center justify-center text-neutral-600 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30"
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+
                   <button
-                    onClick={() => changeQuantity(item, item.quantity - 1)}
-                    disabled={updating === item.productId || item.quantity <= 1}
-                    className="w-8 h-8 flex items-center justify-center text-neutral-600 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30"
+                    onClick={() => handleRemove(item.productId)}
+                    disabled={updating === item.productId}
+                    className="flex items-center gap-1 text-[11px] font-bold text-neutral-400 hover:text-red-600 transition-colors disabled:opacity-50"
                   >
-                    <Minus size={14} />
+                    <Trash2 size={13} /> إزالة
                   </button>
-                  <span className="w-8 text-center font-black text-neutral-900 text-sm">
-                    {updating === item.productId ? <Loader2 size={14} className="animate-spin mx-auto" /> : item.quantity}
+                </div>
+
+                <div className="shrink-0 text-left">
+                  <span className="block text-[10px] text-neutral-400 font-medium">الإجمالي</span>
+                  <span className="block text-lg font-black text-neutral-900">
+                    {formatPrice(item.price * item.quantity)}
                   </span>
-                  <button
-                    onClick={() => changeQuantity(item, item.quantity + 1)}
-                    disabled={updating === item.productId || item.quantity >= 50}
-                    className="w-8 h-8 flex items-center justify-center text-neutral-600 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-30"
-                  >
-                    <Plus size={14} />
-                  </button>
                 </div>
-
-                <button
-                  onClick={() => handleRemove(item.productId)}
-                  disabled={updating === item.productId}
-                  className="flex items-center gap-1 text-[11px] font-bold text-neutral-400 hover:text-red-600 transition-colors disabled:opacity-50"
-                >
-                  <Trash2 size={13} /> إزالة
-                </button>
-              </div>
-
-              <div className="shrink-0 text-left">
-                <span className="block text-[10px] text-neutral-400 font-medium">الإجمالي</span>
-                <span className="block text-lg font-black text-neutral-900">
-                  {formatPrice(item.price * item.quantity)}
-                </span>
               </div>
             </div>
           ))}

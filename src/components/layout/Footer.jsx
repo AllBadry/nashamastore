@@ -120,7 +120,7 @@ export default function Footer() {
           </div>
 
           {/* طرق الدفع المتوفرة في المتجر */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <span className="text-xs font-bold text-neutral-500 ml-2 uppercase tracking-wider">طرق الدفع:</span>
             <div className="bg-neutral-900/50 px-3 py-1.5 rounded-lg flex items-center gap-2 border border-neutral-800 hover:border-neutral-700 transition-colors" title="الدفع عند الاستلام">
               <Wallet size={16} className="text-green-500" />

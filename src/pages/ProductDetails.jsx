@@ -184,7 +184,7 @@ export default function ProductDetails() {
   if (loading) {
     return (
       <div className="space-y-6 pb-10">
-        <div className="w-full h-[72vh] bg-neutral-100 rounded-b-[40px] animate-pulse"></div>
+        <div className="w-full h-[50vh] sm:h-[72vh] bg-neutral-100 rounded-b-[40px] animate-pulse"></div>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-3xl border border-neutral-100 p-6">
             <SkeletonBlock />
@@ -255,7 +255,7 @@ export default function ProductDetails() {
 
       {/* 2. القسم العلوي: المنتج يطفو (Hero Image) */}
       <div
-        className="w-full h-[72vh] relative flex justify-center items-center overflow-hidden transition-colors duration-700 rounded-b-[40px] shadow-2xl"
+        className="w-full h-[50vh] sm:h-[72vh] relative flex justify-center items-center overflow-hidden transition-colors duration-700 rounded-b-[40px] shadow-2xl"
         style={{ backgroundColor: color.hex || '#171717' }}
       >
         <div className="absolute inset-0 bg-black/40"></div>

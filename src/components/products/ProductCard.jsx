@@ -165,8 +165,8 @@ export default function ProductCard({ product }) {
             </h3>
           </Link>
 
-          <div className="flex items-end justify-between mt-auto pt-4 border-t border-neutral-100" style={{ transform: 'translateZ(25px)' }}>
-            <div>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mt-auto pt-4 border-t border-neutral-100" style={{ transform: 'translateZ(25px)' }}>
+            <div className="min-w-0">
               <span className="text-xs text-neutral-400 font-bold block mb-1">السعر</span>
               <span className="text-xl font-black text-neutral-900" dir="ltr">
                 {price} <span className="text-sm text-red-600">{currency}</span>
@@ -178,7 +178,7 @@ export default function ProductCard({ product }) {
               type="button"
               onClick={handleAddToCart}
               disabled={adding}
-              className="group/btn relative overflow-hidden bg-black text-white hover:bg-red-600 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 hover:shadow-[0_10px_20px_rgba(220,38,38,0.3)] hover:-translate-y-1 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="group/btn relative overflow-hidden bg-black text-white hover:bg-red-600 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-[0_10px_20px_rgba(220,38,38,0.3)] hover:-translate-y-1 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {adding ? (
                 <Loader2 size={16} className="relative z-10 animate-spin" />
