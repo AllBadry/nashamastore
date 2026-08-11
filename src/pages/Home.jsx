@@ -5,6 +5,7 @@ import ProductCarousel from '../components/home/ProductCarousel';
 import BannersSection from '../components/home/BannersSection';
 import BrandsSection from '../components/home/BrandsSection';
 import { getLatestProducts, getOffers, getProducts } from '../api/products';
+import InfiniteMarquee from '../components/home/InfiniteMarquee';
 
 const toData = (r) => r.data;
 
@@ -30,6 +31,7 @@ export default function Home() {
 
   return (
     <div className="space-y-12 pb-10 mt-4">
+      <InfiniteMarquee/>
       {/* قسم الهيرو */}
       <HeroSection />
 
