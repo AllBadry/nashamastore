@@ -1,14 +1,40 @@
 import { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Heart, Eye, Loader2, Check } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 export default function ProductCard({ product }) {
   const { name, slug, brand, variance, media, image, price: mappedPrice } = product;
+  const navigate = useNavigate();
+  const { isLoggedIn, addToCart } = useAuthStore();
+  const [adding, setAdding] = useState(false);
+  const [added, setAdded] = useState(false);
+  const [addError, setAddError] = useState('');
   // يدعم الشكلين: المنتج الخام (media/variance) أو المحوَّل بـ mapProduct (image/price)
   const coverImage = media?.cover?.[0]?.preview || media?.gallery?.[0]?.preview || image || 'https://placehold.co/400x400/f5f5f5/a3a3a3?text=No+Image';
   const price = variance?.stock?.price?.value ?? mappedPrice ?? 0;
   const currency = variance?.stock?.price?.symbol || 'JOD';
   const brandName = brand?.name || brand || '';
+
+  const handleAddToCart = async () => {
+    if (!product?.id) return;
+    setAddError('');
+    setAdded(false);
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+    setAdding(true);
+    try {
+      await addToCart({ productId: product.id, quantity: 1 });
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    } catch (err) {
+      setAddError(err.message || 'تعذرت الإضافة إلى السلة');
+    } finally {
+      setAdding(false);
+    }
+  };
 
   // خوارزمية الـ 3D Hover Tilt واللمعان
   const cardRef = useRef(null);
@@ -93,7 +119,7 @@ export default function ProductCard({ product }) {
             className="absolute bottom-4 inset-x-0 flex justify-center gap-3 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-30"
             style={{ transform: 'translateZ(50px)' }}
           >
-            <button className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="نظرة سريعة">
+            <button type="button" onClick={() => navigate(`/product/${slug}`)} className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="نظرة سريعة">
               <Eye size={18} />
             </button>
             <button className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="إضافة للمفضلة">
@@ -119,11 +145,23 @@ export default function ProductCard({ product }) {
             </div>
 
             {/* زر السلة التفاعلي */}
-            <button className="group/btn relative overflow-hidden bg-black text-white hover:bg-red-600 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 hover:shadow-[0_10px_20px_rgba(220,38,38,0.3)] hover:-translate-y-1 active:scale-95">
-              <ShoppingCart size={16} className="relative z-10" />
-              <span className="relative z-10">أضف للسلة</span>
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={adding}
+              className="group/btn relative overflow-hidden bg-black text-white hover:bg-red-600 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 hover:shadow-[0_10px_20px_rgba(220,38,38,0.3)] hover:-translate-y-1 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {adding ? (
+                <Loader2 size={16} className="relative z-10 animate-spin" />
+              ) : added ? (
+                <Check size={16} className="relative z-10" />
+              ) : (
+                <ShoppingCart size={16} className="relative z-10" />
+              )}
+              <span className="relative z-10">{added ? 'تمت الإضافة' : 'أضف للسلة'}</span>
             </button>
           </div>
+          {addError && <p className="mt-2 text-[11px] text-red-600 font-semibold">{addError}</p>}
         </div>
 
       </div>
