@@ -1,73 +1,131 @@
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Star } from 'lucide-react';
-import { formatPrice } from '../../utils/product';
+import { ShoppingCart, Heart, Eye } from 'lucide-react';
 
 export default function ProductCard({ product }) {
-  const discount = product.isOffer && product.oldPrice > product.price
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
+  const { name, slug, brand, variance, media } = product;
+  const coverImage = media?.cover?.[0]?.preview || media?.gallery?.[0]?.preview || 'https://placehold.co/400x400/f5f5f5/a3a3a3?text=No+Image';
+  const price = variance?.stock?.price?.value || 0;
+  const currency = variance?.stock?.price?.symbol || 'JOD';
+  const brandName = brand?.name || '';
+
+  // خوارزمية الـ 3D Hover Tilt واللمعان
+  const cardRef = useRef(null);
+  const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [glow, setGlow] = useState({ x: 50, y: 50, opacity: 0 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    // حساب موقع الماوس داخل الكرت
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // حساب درجة الدوران بناءً على بعد الماوس عن المركز
+    const rotateX = ((y - centerY) / centerY) * -12; // أقصى ميلان 12 درجة
+    const rotateY = ((x - centerX) / centerX) * 12;
+    
+    setRotate({ x: rotateX, y: rotateY });
+    setGlow({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 1
+    });
+  };
+
+  const handleMouseLeave = () => {
+    // إعادة الكرت لوضعه الطبيعي عند خروج الماوس
+    setRotate({ x: 0, y: 0 });
+    setGlow({ ...glow, opacity: 0 });
+  };
 
   return (
-    <Link
-      to={`/product/${product.slug}`}
-      className="group flex flex-col bg-white rounded-2xl border border-neutral-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_-10px_rgba(220,38,38,0.2)] hover:border-red-100 hover:-translate-y-1 transition-all duration-300 overflow-hidden w-full"
-    >
-      {/* صورة المنتج */}
-      <div className="relative aspect-square bg-neutral-50 overflow-hidden flex items-center justify-center">
-        {product.image ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-neutral-300 text-sm font-medium">
-            لا توجد صورة
-          </div>
-        )}
+    // المنظور (Perspective) يعطي العمق الثلاثي الأبعاد
+    <div className="group perspective-[1200px] h-full">
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="relative bg-white rounded-3xl border border-neutral-100 flex flex-col h-full shadow-sm transition-all duration-200 ease-out will-change-transform"
+        style={{
+          transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) scale3d(${glow.opacity ? 1.02 : 1}, ${glow.opacity ? 1.02 : 1}, 1)`,
+          transformStyle: 'preserve-3d', // السماح للعناصر الداخلية بالطفو
+        }}
+      >
+        {/* تأثير اللمعان الزجاجي المتحرك (Glow) */}
+        <div 
+          className="absolute inset-0 z-50 rounded-3xl pointer-events-none transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${glow.x}% ${glow.y}%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%)`,
+            opacity: glow.opacity,
+            mixBlendMode: 'overlay'
+          }}
+        ></div>
 
-        {/* شارة التخفيض */}
-        {discount > 0 && (
-          <span className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg">
-            خصم {discount}%
-          </span>
-        )}
-      </div>
-
-      {/* تفاصيل المنتج */}
-      <div className="flex flex-col flex-1 p-4 gap-1.5">
-        <span className="text-[11px] font-bold text-red-500 tracking-wide">{product.brand}</span>
-        <h3 className="font-bold text-sm text-neutral-900 leading-snug line-clamp-2 min-h-[2.5rem]">
-          {product.name}
-        </h3>
-
-        {/* التقييم */}
-        {product.avgRate > 0 && (
-          <div className="flex items-center gap-1 text-xs text-neutral-400">
-            <Star size={13} className="text-amber-400 fill-amber-400" />
-            <span className="font-semibold">{Number(product.avgRate).toFixed(1)}</span>
-          </div>
-        )}
-
-        {/* السعر */}
-        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
-          <div className="flex flex-col">
-            {product.isOffer && product.oldPrice > 0 && (
-              <span className="text-xs text-neutral-400 line-through font-medium">
-                {formatPrice(product.oldPrice)}
-              </span>
-            )}
-            <span className="text-lg font-black text-neutral-900">
-              {formatPrice(product.price)}
+        {/* شارة الماركة (تطفو للأمام بفضل translateZ) */}
+        {brandName && (
+          <div className="absolute top-4 right-4 z-20" style={{ transform: 'translateZ(30px)' }}>
+            <span className="bg-black/80 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
+              {brandName}
             </span>
           </div>
+        )}
 
-          <span className="flex items-center justify-center w-9 h-9 rounded-full bg-neutral-50 text-neutral-700 group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
-            <ShoppingCart size={16} strokeWidth={2} />
-          </span>
+        {/* الصورة مع تأثير التكبير */}
+        <div className="relative aspect-square p-6 overflow-hidden bg-gradient-to-b from-neutral-50 to-white rounded-t-3xl flex items-center justify-center">
+          <img 
+            src={coverImage} 
+            alt={name}
+            onError={(e) => {
+              e.target.onerror = null; 
+              e.target.src = 'https://placehold.co/400x400/f5f5f5/a3a3a3?text=No+Image';
+            }}
+            className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
+            style={{ transform: 'translateZ(40px)' }} // الصورة تطفو خارج الكرت
+          />
+
+          {/* أزرار الإجراءات السريعة (تنزلق من الأسفل عند التمرير) */}
+          <div 
+            className="absolute bottom-4 inset-x-0 flex justify-center gap-3 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-30"
+            style={{ transform: 'translateZ(50px)' }}
+          >
+            <button className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="نظرة سريعة">
+              <Eye size={18} />
+            </button>
+            <button className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:scale-110 active:scale-95" title="إضافة للمفضلة">
+              <Heart size={18} />
+            </button>
+          </div>
         </div>
+
+        {/* تفاصيل المنتج بالأسفل */}
+        <div className="p-5 flex flex-col flex-grow justify-between relative z-10 bg-white rounded-b-3xl">
+          <Link to={`/product/${slug}`} className="mb-4 block" style={{ transform: 'translateZ(20px)' }}>
+            <h3 className="font-bold text-neutral-800 text-sm md:text-base line-clamp-2 group-hover:text-red-600 transition-colors leading-relaxed">
+              {name}
+            </h3>
+          </Link>
+
+          <div className="flex items-end justify-between mt-auto pt-4 border-t border-neutral-100" style={{ transform: 'translateZ(25px)' }}>
+            <div>
+              <span className="text-xs text-neutral-400 font-bold block mb-1">السعر</span>
+              <span className="text-xl font-black text-neutral-900" dir="ltr">
+                {price} <span className="text-sm text-red-600">{currency}</span>
+              </span>
+            </div>
+
+            {/* زر السلة التفاعلي */}
+            <button className="group/btn relative overflow-hidden bg-black text-white hover:bg-red-600 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 hover:shadow-[0_10px_20px_rgba(220,38,38,0.3)] hover:-translate-y-1 active:scale-95">
+              <ShoppingCart size={16} className="relative z-10" />
+              <span className="relative z-10">أضف للسلة</span>
+            </button>
+          </div>
+        </div>
+
       </div>
-    </Link>
+    </div>
   );
 }
