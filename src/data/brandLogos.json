@@ -1,0 +1,272 @@
+[
+  {
+    "slug": "xiaomi",
+    "name": "شاومي",
+    "image": "/brands/xiaomi.svg"
+  },
+  {
+    "slug": "hyperx",
+    "name": "هايبر اكس",
+    "image": "/brands/hyperx.svg"
+  },
+  {
+    "slug": "green-universal-",
+    "name": "جرين يونيفرسال",
+    "image": "/brands/green-universal-.svg"
+  },
+  {
+    "slug": "powerology",
+    "name": "باورولوجي",
+    "image": null
+  },
+  {
+    "slug": "jbl",
+    "name": "جي بي ال",
+    "image": "/brands/jbl.svg"
+  },
+  {
+    "slug": "yesido",
+    "name": "يس اي دو",
+    "image": null
+  },
+  {
+    "slug": "porodo",
+    "name": "بورودو",
+    "image": null
+  },
+  {
+    "slug": "wiwu",
+    "name": "ويوو",
+    "image": "/brands/wiwu.svg"
+  },
+  {
+    "slug": "soundcore",
+    "name": "ساوند كور",
+    "image": "/brands/soundcore.svg"
+  },
+  {
+    "slug": "blackview",
+    "name": "بلاك فيو",
+    "image": null
+  },
+  {
+    "slug": "baseus",
+    "name": "باسيوس",
+    "image": null
+  },
+  {
+    "slug": "others",
+    "name": "براندات أخرى",
+    "image": null
+  },
+  {
+    "slug": "kieslect",
+    "name": "كيسليكت",
+    "image": null
+  },
+  {
+    "slug": "remax-",
+    "name": "ريمكس",
+    "image": "/brands/remax-.svg"
+  },
+  {
+    "slug": "honor",
+    "name": "أونور",
+    "image": "/brands/honor.svg"
+  },
+  {
+    "slug": "samsung",
+    "name": "سامسونج",
+    "image": "/brands/samsung.svg"
+  },
+  {
+    "slug": "motorola",
+    "name": "موتورولا",
+    "image": "/brands/motorola.svg"
+  },
+  {
+    "slug": "infinix",
+    "name": "إنفينيكس",
+    "image": "/brands/infinix.svg"
+  },
+  {
+    "slug": "spider",
+    "name": "سبايدر",
+    "image": "/brands/spider.svg"
+  },
+  {
+    "slug": "apple",
+    "name": "آبل",
+    "image": "/brands/apple.svg"
+  },
+  {
+    "slug": "whoop",
+    "name": "ووب",
+    "image": "/brands/whoop.svg"
+  },
+  {
+    "slug": "huawei",
+    "name": "هواوي",
+    "image": "/brands/huawei.svg"
+  },
+  {
+    "slug": "harman-kardon",
+    "name": "هارمان كاردون",
+    "image": "/brands/harman-kardon.svg"
+  },
+  {
+    "slug": "g-tab-",
+    "name": "جي-تاب",
+    "image": "/brands/g-tab-.svg"
+  },
+  {
+    "slug": "joyroom",
+    "name": "جويروم",
+    "image": null
+  },
+  {
+    "slug": "doogee",
+    "name": "دوجي",
+    "image": "/brands/doogee.svg"
+  },
+  {
+    "slug": "sony",
+    "name": "سوني",
+    "image": "/brands/sony.svg"
+  },
+  {
+    "slug": "eufy",
+    "name": "يوفي",
+    "image": null
+  },
+  {
+    "slug": "hifuture",
+    "name": "هاي فيوتشر",
+    "image": "/brands/hifuture.svg"
+  },
+  {
+    "slug": "asus",
+    "name": "اسوس",
+    "image": "/brands/asus.svg"
+  },
+  {
+    "slug": "acer",
+    "name": "اسر",
+    "image": "/brands/acer.svg"
+  },
+  {
+    "slug": "lenovo",
+    "name": "لينوفو",
+    "image": "/brands/lenovo.svg"
+  },
+  {
+    "slug": "tecno",
+    "name": "تكنو",
+    "image": "/brands/tecno.svg"
+  },
+  {
+    "slug": "realme",
+    "name": "ريلمي",
+    "image": "/brands/realme.svg"
+  },
+  {
+    "slug": "g-guard",
+    "name": "جي جارد",
+    "image": "/brands/g-guard.svg"
+  },
+  {
+    "slug": "tp-link",
+    "name": "تي بي لينك",
+    "image": "/brands/tp-link.svg"
+  },
+  {
+    "slug": "anker",
+    "name": "آنكر",
+    "image": "/brands/anker.svg"
+  },
+  {
+    "slug": "jokade",
+    "name": "جوكيد",
+    "image": null
+  },
+  {
+    "slug": "coteci",
+    "name": "كووتي",
+    "image": null
+  },
+  {
+    "slug": "amazon",
+    "name": "امازون",
+    "image": "/brands/amazon.svg"
+  },
+  {
+    "slug": "meling",
+    "name": "ميلينغ",
+    "image": "/brands/meling.svg"
+  },
+  {
+    "slug": "sigma",
+    "name": "سيغما",
+    "image": "/brands/sigma.svg"
+  },
+  {
+    "slug": "canon",
+    "name": "كانون",
+    "image": "/brands/canon.svg"
+  },
+  {
+    "slug": "hp",
+    "name": "هب",
+    "image": "/brands/hp.svg"
+  },
+  {
+    "slug": "ravpower",
+    "name": "راف باور",
+    "image": null
+  },
+  {
+    "slug": "choetech",
+    "name": "تشويتيك",
+    "image": null
+  },
+  {
+    "slug": "belkin",
+    "name": "بلكين",
+    "image": "/brands/belkin.svg"
+  },
+  {
+    "slug": "dyson",
+    "name": "دايسون",
+    "image": "/brands/dyson.svg"
+  },
+  {
+    "slug": "nikon-",
+    "name": "نيكون",
+    "image": "/brands/nikon-.svg"
+  },
+  {
+    "slug": "insta360",
+    "name": "انستا 360",
+    "image": "/brands/insta360.svg"
+  },
+  {
+    "slug": "gopro",
+    "name": "جو برو",
+    "image": "/brands/gopro.svg"
+  },
+  {
+    "slug": "momax",
+    "name": "موماكس",
+    "image": "/brands/momax.svg"
+  },
+  {
+    "slug": "nokia",
+    "name": "نوكيا",
+    "image": "/brands/nokia.svg"
+  },
+  {
+    "slug": "mercusys",
+    "name": "مركوسيس",
+    "image": null
+  }
+]
