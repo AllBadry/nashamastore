@@ -69,12 +69,12 @@ export default function HeroSection() {
     <div className="relative w-full min-h-[90vh] bg-[#F8F9FA] overflow-hidden flex flex-col justify-between pt-20 pb-12">
       
       {/* الكلمة العملاقة الملونة في الخلفية */}
-      <div className="absolute top-[12%] left-0 w-full flex flex-col items-center justify-center pointer-events-none select-none z-0">
-        <span className="text-[1.2rem] md:text-[2rem] font-black text-neutral-800 mb-[-1.5rem] md:mb-[-3rem] z-10 bg-[#F8F9FA] px-6 py-1 rounded-full shadow-sm">
+      <div className="absolute top-[6%] md:top-[12%] left-0 w-full flex flex-col items-center justify-center pointer-events-none select-none z-0">
+        <span className="hidden md:flex text-[1.2rem] md:text-[2rem] font-black text-neutral-800 mb-[-1.5rem] md:mb-[-3rem] z-10 bg-[#F8F9FA] px-6 py-1 rounded-full shadow-sm">
           Welcome To
         </span>
         <h1 
-          className="text-[18vw] md:text-[16vw] font-black uppercase tracking-tighter drop-shadow-xl opacity-90"
+          className="text-[18vw] md:text-[16vw] font-black uppercase tracking-tighter drop-shadow-xl opacity-90 -mb-[12vw] md:mb-0"
           style={{ 
             background: 'linear-gradient(to right, #4285F4, #EA4335, #FBBC05, #34A853)',
             WebkitBackgroundClip: 'text',
@@ -88,7 +88,7 @@ export default function HeroSection() {
       </div>
 
       {/* منطقة البطاقات المتناثرة المتفاعلة */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex-grow flex items-center justify-center mt-20 md:mt-32 mb-16 px-4">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex-grow flex items-center justify-center mt-[4.5rem] md:mt-32 mb-16 px-4">
         
         {/* أسهم يدوية ورسومات (Doodles) */}
         <div className="absolute left-[5%] md:left-[10%] top-[-40px] hidden md:flex flex-col items-center z-40">
