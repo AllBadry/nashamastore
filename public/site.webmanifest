@@ -1,0 +1,28 @@
+{
+  "name": "Nashama Store — الهواتف والإكسسوارات الأصلية",
+  "short_name": "Nashama",
+  "description": "وجهتك في الأردن للهواتف والساعات والصوتيات والإكسسوارات الأصلية مع ضمان رسمي وتوصيل سريع.",
+  "start_url": "/",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#ffffff",
+  "theme_color": "#0E1116",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
