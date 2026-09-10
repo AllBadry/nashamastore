@@ -127,6 +127,10 @@ export default function BrandsSection() {
                           <img 
                             src={logoUrl} 
                             alt={brand.name} 
+                            loading="lazy"
+                            decoding="async"
+                            width={144}
+                            height={144}
                             className="w-full h-full object-contain"
                             onError={(e) => { 
                               e.target.style.display = 'none'; 

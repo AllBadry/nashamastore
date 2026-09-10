@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 
 // بيانات البطاقات مع إحداثيات موقعها الأساسية (لتسهيل حساب الحركة)
@@ -64,6 +64,21 @@ const cards = [
 export default function HeroSection() {
   // تتبع الـ ID الخاص بالبطاقة التي يقف عليها الماوس
   const [hoveredCard, setHoveredCard] = useState(null);
+  // إيقاف أنيميشن تدرج الكلمة مؤقتاً عندما تكون بعيدة عن الشاشة (توفير للأداء)
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        el.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="relative w-full min-h-[90vh] bg-[#F8F9FA] overflow-hidden flex flex-col justify-between pt-20 pb-12">
@@ -74,6 +89,7 @@ export default function HeroSection() {
           Welcome To
         </span>
         <h1 
+          ref={titleRef}
           className="text-[18vw] md:text-[16vw] font-black uppercase tracking-tighter drop-shadow-xl opacity-90 -mb-[12vw] md:mb-0"
           style={{ 
             background: 'linear-gradient(to right, #4285F4, #EA4335, #FBBC05, #34A853)',
@@ -171,6 +187,10 @@ export default function HeroSection() {
                   <img 
                     src={card.image} 
                     alt={card.title} 
+                    fetchpriority="high"
+                    decoding="async"
+                    width={224}
+                    height={288}
                     className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out"
                     style={{
                       transform: hoveredCard === card.id ? 'scale(1.1)' : 'scale(1)'

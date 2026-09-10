@@ -182,6 +182,8 @@ export default function ProductsPage() {
                         <img 
                           src={imageUrl} 
                           alt={product.name} 
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-contain p-6 mix-blend-darken group-hover:scale-110 transition-transform duration-700 ease-out relative z-10"
                         />
                       )}

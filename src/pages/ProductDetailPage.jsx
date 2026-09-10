@@ -129,7 +129,7 @@ export default function ProductDetailPage() {
                             activeImage === i ? 'border-blue-600' : 'border-neutral-100 hover:border-neutral-300'
                           }`}
                         >
-                          <img src={img} alt="" className="w-full h-full object-cover" />
+                          <img src={img} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                         </button>
                       ))}
                     </div>

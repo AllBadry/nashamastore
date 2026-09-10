@@ -4,28 +4,28 @@ import { ArrowUpRight, ChevronDown } from 'lucide-react';
 const categoriesData = [
   {
     id: '01',
-    title: 'Accounts',
-    slug: 'accounts',
-    description: 'Choose the fully regulated accounts that work best for your digital platform.',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600&h=800',
-    features: ['Regulated setup', 'Digital platform', 'User management']
+    title: 'Smartphones',
+    slug: 'smartphones',
+    description: 'The latest phones from the top global brands.',
+    image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&q=80&w=600&h=800',
+    features: ['Latest flagships', 'Official warranty', 'Best prices']
   },
   {
     id: '02',
-    title: 'Clearing',
-    slug: 'clearing',
-    description: 'Access real-time clearing infrastructure with automated compliance.',
-    image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=600&h=800',
-    features: ['Real-time sync', 'Automated compliance', 'High-speed routing', 'Secure ledger']
+    title: 'Wearables',
+    slug: 'wearables',
+    description: 'Smart watches and earbuds for your everyday.',
+    image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&q=80&w=600&h=800',
+    features: ['Smart watches', 'Earbuds', 'High durability', 'Fast sensors']
   },
   {
     id: '03',
-    title: 'Embedded Banking',
-    slug: 'embedded-banking',
-    description: 'Seamlessly embed financial services into your customer journey under your own custom brand.',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200&h=800',
-    stat: '+50M',
-    statDesc: 'API requests processed seamlessly under custom branding.'
+    title: 'Audio & Accessories',
+    slug: 'audio',
+    description: 'Headphones, chargers, cables and everything in between.',
+    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=1200&h=800',
+    stat: '+500',
+    statDesc: 'Devices and accessories in stock, ready to ship.'
   }
 ];
 
@@ -42,23 +42,23 @@ export default function CategoriesSection() {
           </svg>
 
           <p className="text-neutral-500 font-medium mb-4 text-sm md:text-base tracking-wide">
-            Revolutionize Your
+            Explore By Category
           </p>
           <h2 className="text-4xl md:text-6xl lg:text-[5rem] font-medium tracking-tight leading-[1.05] max-w-5xl">
-            Financial Infrastructure with <br className="hidden md:block" />
-            the Ultimate API-Powered <br className="hidden md:block" />
-            <span className="font-semibold">Banking</span>
+            Shop the Latest in <br className="hidden md:block" />
+            <span className="font-semibold">Phones, Wearables</span> <br className="hidden md:block" />
+            and <span className="font-semibold">Accessories</span>
           </h2>
           
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-10">
             <Link 
-              to="/get-started"
+              to="/products"
               className="bg-neutral-900 text-white px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide hover:bg-neutral-800 hover:scale-105 transition-all duration-300"
             >
-              START INTEGRATING
+              START SHOPPING
             </Link>
-            <p className="text-sm font-medium text-neutral-500 max-w-[200px] leading-snug">
-              The Next generation Production for Fintechs
+            <p className="text-sm font-medium text-neutral-500 max-w-[220px] leading-snug">
+              Genuine devices with official warranty across Jordan
             </p>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function CategoriesSection() {
             className="group relative col-span-1 bg-[#E8EAE9] rounded-2xl overflow-hidden p-6 flex flex-col justify-between hover:shadow-xl transition-all duration-500"
           >
             <div className="absolute inset-0 opacity-40 mix-blend-multiply group-hover:scale-105 transition-transform duration-700">
-              <img src={categoriesData[0].image} alt="Accounts" className="w-full h-full object-cover" />
+              <img src={categoriesData[0].image} alt="Accounts" loading="lazy" decoding="async" className="w-full h-full object-cover" />
             </div>
             
             {/* Top Badge */}
@@ -103,7 +103,7 @@ export default function CategoriesSection() {
           >
             {/* Background Image + Vibrant Gradient Overlay */}
             <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-700">
-              <img src={categoriesData[1].image} alt="Clearing" className="w-full h-full object-cover grayscale opacity-50" />
+              <img src={categoriesData[1].image} alt="Clearing" loading="lazy" decoding="async" className="w-full h-full object-cover grayscale opacity-50" />
             </div>
             <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-orange-400 to-yellow-400 mix-blend-overlay opacity-90"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-orange-600/80 to-transparent"></div>
@@ -130,7 +130,7 @@ export default function CategoriesSection() {
           >
             {/* Background Image + Glass/Ribbed Gradient Overlay */}
             <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-700">
-              <img src={categoriesData[2].image} alt="Embedded Banking" className="w-full h-full object-cover grayscale opacity-60" />
+              <img src={categoriesData[2].image} alt="Embedded Banking" loading="lazy" decoding="async" className="w-full h-full object-cover grayscale opacity-60" />
             </div>
             <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-600 via-purple-500 to-blue-400 mix-blend-hard-light opacity-90"></div>
             <div className="absolute inset-0 bg-gradient-to-t from-purple-900/60 to-transparent"></div>

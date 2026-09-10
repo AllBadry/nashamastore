@@ -104,7 +104,6 @@ export default function OffersSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             {offers.map((product, index) => {
-              console.log('Product data:', product.name, 'Images:', product.media);
               const gradient = gradients[index % gradients.length];
               const colSpan = (index === 0 || index === 3) ? 'lg:col-span-2' : 'lg:col-span-1';
               
@@ -132,6 +131,8 @@ export default function OffersSection() {
                         <img 
                           src={imageUrl} 
                           alt={product.name} 
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-out relative z-0"
                         />
                       ) : (
