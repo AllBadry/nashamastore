@@ -17,5 +17,9 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // المشروع يستخدم JSX runtime التلقائي، لكن كل الملفات تستورد React
+      'no-unused-vars': ['error', { varsIgnorePattern: '^React$' }],
+    },
   },
 ])

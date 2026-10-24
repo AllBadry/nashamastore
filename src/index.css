@@ -1,3 +1,182 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    font-family: 'Inter', 'Cairo', sans-serif;
+    background-color: #05060a;
+    color: #e7e9f0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: rgba(239, 68, 68, 0.45);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #05060a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ef4444, #7f1d1d);
+    border-radius: 999px;
+    border: 2px solid #05060a;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Space Grotesk', 'Cairo', sans-serif;
+  }
+
+  .font-ar {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(100deg, #fecaca 0%, #ef4444 45%, #ff3d5a 100%);
+  }
+
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+  }
+
+  .glass-strong {
+    @apply border border-white/15 bg-[#0c0e17]/80 backdrop-blur-2xl;
+  }
+
+  .neon-ring {
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.35),
+      0 20px 60px -15px rgba(239, 68, 68, 0.5);
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold tracking-wide text-white transition-transform duration-300 hover:scale-[1.04] active:scale-95;
+    background: linear-gradient(120deg, #ef4444 0%, #b91c1c 45%, #ff2d55 130%);
+    box-shadow: 0 12px 40px -10px rgba(239, 68, 68, 0.7);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold tracking-wide text-white/85 border border-white/15 bg-white/5 transition-all duration-300 hover:bg-white/10 hover:border-white/30 hover:scale-[1.03] active:scale-95 backdrop-blur-xl;
+  }
+
+  .section-pad {
+    @apply px-6 sm:px-10 lg:px-16 xl:px-24;
+  }
+
+  .card-hover {
+    @apply transition-all duration-500 hover:-translate-y-2;
+  }
+
+  .title-overline {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[11px] font-display font-semibold uppercase tracking-[0.3em] text-red-300 backdrop-blur-md;
+  }
+}
+
+@layer utilities {
+  .text-stroke {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.14);
+    color: transparent;
+  }
+
+  .text-stroke-violet {
+    -webkit-text-stroke: 1.5px rgba(134, 59, 255, 0.6);
+    color: transparent;
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
+    mask-image: linear-gradient(180deg, #000 60%, transparent);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .perspective-1200 {
+    perspective: 1200px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  .animate-marquee-slow {
+    animation: marquee 50s linear infinite;
+  }
+
+  .animate-float {
+    animation: float 7s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 22s linear infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--float-rot, 0deg));
+  }
+  50% {
+    transform: translateY(-22px) rotate(var(--float-rot, 0deg));
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    filter: blur(80px);
+  }
+  50% {
+    opacity: 0.9;
+    filter: blur(110px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-slow,
+  .animate-float,
+  .animate-spin-slow,
+  .animate-pulse-glow {
+    animation: none;
+  }
+}
