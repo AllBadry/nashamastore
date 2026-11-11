@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLang } from '../../i18n';
 import { hasSession, onAuthChange } from '../../lib/authState';
 import { getCartCount, onShelfChange } from '../../lib/shelf';
+import NotificationBell from './NotificationBell';
 
 // زر تبديل اللغة: يعرض اللغة الأخرى التي سيتحول إليها الموقع
 const LanguageToggle = ({ compact = false }) => {
@@ -142,6 +143,8 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center gap-2">
             <LanguageToggle />
 
+            {authed && <NotificationBell />}
+
             <Link
               to={favoritesTo}
               title={t('nav.favorites')}
@@ -266,6 +269,7 @@ const Navbar = () => {
               <span className="text-[10px]">{t('nav.cart')}</span>
             </Link>
 
+            {authed && <NotificationBell />}
             <LanguageToggle compact />
           </div>
         </div>

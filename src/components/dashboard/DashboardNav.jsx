@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const iconMap = {
   overview: (
@@ -48,38 +48,165 @@ const iconMap = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
     </svg>
   ),
+  more: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+    </svg>
+  ),
+  close: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  ),
 };
 
-const DashboardNav = ({ items, active, onChange, onLogout, logoutLabel = 'تسجيل الخروج' }) => (
-  <nav className="flex lg:flex-col items-stretch gap-2 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0">
-    {items.map((item) => {
-      const isActive = active === item.key;
-      return (
-        <button
-          key={item.key}
-          type="button"
-          onClick={() => onChange(item.key)}
-          className={`flex items-center gap-3 shrink-0 rounded-xl px-4 py-3 text-sm font-bold transition-colors duration-200 ${
-            isActive
-              ? 'bg-gradient-to-l from-[#8b151a] to-[#ef4444] text-white shadow-lg shadow-[#8b151a]/25'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          {iconMap[item.key]}
-          <span className="whitespace-nowrap">{item.label}</span>
-        </button>
-      );
-    })}
+// التبويبات الظاهرة مباشرة في شريط الأسفل (باقي التبويبات داخل "المزيد")
+const PRIMARY_KEYS = ['overview', 'cart', 'orders', 'wallet'];
 
-    <button
-      type="button"
-      onClick={onLogout}
-      className="flex items-center gap-3 shrink-0 rounded-xl px-4 py-3 text-sm font-bold text-[#fca5a5] hover:bg-white/5 transition-colors duration-200"
-    >
-      {iconMap.logout}
-      <span className="whitespace-nowrap">{logoutLabel}</span>
-    </button>
-  </nav>
-);
+const DashboardNav = ({
+  items,
+  active,
+  onChange,
+  onLogout,
+  logoutLabel = 'تسجيل الخروج',
+  variant = 'sidebar',
+  moreLabel = 'المزيد',
+}) => {
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const select = (key) => {
+    setMoreOpen(false);
+    onChange(key);
+  };
+
+  if (variant === 'bottom') {
+    const primary = items.filter((item) => PRIMARY_KEYS.includes(item.key));
+    const secondary = items.filter((item) => !PRIMARY_KEYS.includes(item.key));
+    const moreActive = secondary.some((item) => item.key === active);
+
+    return (
+      <>
+        <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-[#0a0b12]/95 backdrop-blur-xl">
+          <div className="grid grid-cols-5 pb-[env(safe-area-inset-bottom)]">
+            {primary.map((item) => {
+              const isActive = active === item.key;
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => select(item.key)}
+                  className={`flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-bold transition-colors ${
+                    isActive ? 'text-[#fca5a5]' : 'text-gray-500 hover:text-white'
+                  }`}
+                >
+                  <span className={isActive ? 'text-[#ef4444]' : ''}>{iconMap[item.key]}</span>
+                  <span className="whitespace-nowrap">{item.label}</span>
+                </button>
+              );
+            })}
+            <button
+              type="button"
+              onClick={() => setMoreOpen(true)}
+              className={`flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-bold transition-colors ${
+                moreActive ? 'text-[#fca5a5]' : 'text-gray-500 hover:text-white'
+              }`}
+            >
+              <span className={moreActive ? 'text-[#ef4444]' : ''}>{iconMap.more}</span>
+              <span className="whitespace-nowrap">{moreLabel}</span>
+            </button>
+          </div>
+        </nav>
+
+        {moreOpen && (
+          <div className="lg:hidden fixed inset-0 z-[60]">
+            <div
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={() => setMoreOpen(false)}
+            />
+            <div className="absolute inset-x-0 bottom-0 rounded-t-3xl border-t border-white/10 bg-[#0d0f18] px-4 pt-3 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-20px_60px_rgba(0,0,0,0.6)]">
+              <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/15" />
+              <div className="mb-3 flex items-center justify-between px-1">
+                <p className="text-sm font-bold text-white">{moreLabel}</p>
+                <button
+                  type="button"
+                  onClick={() => setMoreOpen(false)}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
+                  aria-label={moreLabel}
+                >
+                  {iconMap.close}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2">
+                {secondary.map((item) => {
+                  const isActive = active === item.key;
+                  return (
+                    <button
+                      key={item.key}
+                      type="button"
+                      onClick={() => select(item.key)}
+                      className={`flex flex-col items-center gap-2 rounded-2xl border px-2 py-3 text-[11px] font-bold transition-colors ${
+                        isActive
+                          ? 'border-[#8b151a]/50 bg-[#8b151a]/15 text-white'
+                          : 'border-white/5 bg-white/[0.03] text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      {iconMap[item.key]}
+                      <span className="text-center leading-tight">{item.label}</span>
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMoreOpen(false);
+                    onLogout();
+                  }}
+                  className="flex flex-col items-center gap-2 rounded-2xl border border-red-500/20 bg-red-500/10 px-2 py-3 text-[11px] font-bold text-red-300 hover:bg-red-500/20 transition-colors"
+                >
+                  {iconMap.logout}
+                  <span className="text-center leading-tight">{logoutLabel}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <nav className="flex lg:flex-col items-stretch gap-2 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0">
+      {items.map((item) => {
+        const isActive = active === item.key;
+        return (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => onChange(item.key)}
+            className={`flex items-center gap-3 shrink-0 rounded-xl px-4 py-3 text-sm font-bold transition-colors duration-200 ${
+              isActive
+                ? 'bg-gradient-to-l from-[#8b151a] to-[#ef4444] text-white shadow-lg shadow-[#8b151a]/25'
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            {iconMap[item.key]}
+            <span className="whitespace-nowrap">{item.label}</span>
+          </button>
+        );
+      })}
+
+      <button
+        type="button"
+        onClick={onLogout}
+        className="flex items-center gap-3 shrink-0 rounded-xl px-4 py-3 text-sm font-bold text-[#fca5a5] hover:bg-white/5 transition-colors duration-200"
+      >
+        {iconMap.logout}
+        <span className="whitespace-nowrap">{logoutLabel}</span>
+      </button>
+    </nav>
+  );
+};
 
 export default DashboardNav;

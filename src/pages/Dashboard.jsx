@@ -75,13 +75,13 @@ const Dashboard = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="relative bg-[#05060a] min-h-screen pt-28 pb-20 overflow-hidden font-sans" dir="rtl">
+    <section ref={sectionRef} className="relative bg-[#05060a] min-h-screen pt-24 md:pt-28 pb-28 lg:pb-20 overflow-hidden font-sans" dir="rtl">
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(139,21,26,0.12),transparent_65%)]"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
-        <div className="dash-panel grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 items-start">
+        <div className="dash-panel grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6 lg:gap-8 items-start">
 
-          <aside className="lg:sticky lg:top-28">
+          <aside className="hidden lg:block lg:sticky lg:top-28">
             <div className="mb-5 px-1">
               <h1 className="font-black text-2xl text-white">
                 {t('dashboard.hello')}، {user?.name?.split(' ')[0] || ''}
@@ -98,6 +98,12 @@ const Dashboard = () => {
           </aside>
 
           <main>
+            <div className="lg:hidden mb-5 px-1">
+              <h1 className="font-black text-xl text-white">
+                {t('dashboard.hello')}، {user?.name?.split(' ')[0] || ''}
+              </h1>
+              <p className="text-xs text-gray-500 mt-1">{t('dashboard.sub')}</p>
+            </div>
             {active === 'overview' && <Overview user={user} />}
             {active === 'cart' && <Cart />}
             {active === 'orders' && <Orders />}
@@ -109,6 +115,16 @@ const Dashboard = () => {
           </main>
         </div>
       </div>
+
+      <DashboardNav
+        variant="bottom"
+        items={navItems}
+        active={active}
+        onChange={changeTab}
+        onLogout={handleLogout}
+        logoutLabel={t('dashboard.nav.logout')}
+        moreLabel={t('dashboard.nav.more')}
+      />
     </section>
   );
 };

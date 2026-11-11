@@ -8,6 +8,25 @@ const formatTime = (value) => {
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleString();
 };
 
+const PRIORITY_KEY = {
+  low: 'dashboard.support.priorityLow',
+  medium: 'dashboard.support.priorityMedium',
+  high: 'dashboard.support.priorityHigh',
+  urgent: 'dashboard.support.priorityUrgent',
+};
+
+// خيارات الأولوية مع شرح قصير يظهر بجانب كل خيار
+const PRIORITY_OPTIONS = [
+  { value: 'low', labelKey: 'dashboard.support.priorityLow', shortKey: 'dashboard.support.priorityLowShort', descKey: 'dashboard.support.priorityLowDesc' },
+  { value: 'medium', labelKey: 'dashboard.support.priorityMedium', shortKey: 'dashboard.support.priorityMediumShort', descKey: 'dashboard.support.priorityMediumDesc' },
+  { value: 'high', labelKey: 'dashboard.support.priorityHigh', shortKey: 'dashboard.support.priorityHighShort', descKey: 'dashboard.support.priorityHighDesc' },
+  { value: 'urgent', labelKey: 'dashboard.support.priorityUrgent', shortKey: 'dashboard.support.priorityUrgentShort', descKey: 'dashboard.support.priorityUrgentDesc' },
+];
+
+// تنسيق موحّد لعناصر القائمة المنسدلة (خلفية داكنة ونص أبيض)
+const OPTION_STYLE = { backgroundColor: '#0b0d16', color: '#ffffff' };
+const SELECT_DARK_STYLE = { colorScheme: 'dark' };
+
 // صفحة الدعم: تعرض تيكت العميل المفتوح على شكل شات، أو تتيح فتح تيكت جديد.
 const Support = () => {
   const { t } = useLang();
@@ -19,6 +38,7 @@ const Support = () => {
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState('');
   const [subject, setSubject] = useState('');
+  const [priority, setPriority] = useState('medium');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
 
@@ -44,13 +64,37 @@ const Support = () => {
     };
   }, []);
 
+  const isOpen = ticket?.status === 'open';
+
   // تمرير تلقائي لآخر رسالة
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [ticket?.messages?.length, loading]);
 
-  const isOpen = ticket?.status === 'open';
+  // تحديث تلقائي للتيكت المفتوح عند وصول رسائل جديدة (Polling كل 5 ثوانٍ)
+  useEffect(() => {
+    if (!isOpen) return;
+    const timer = setInterval(async () => {
+      try {
+        const current = await getMyTicket();
+        if (!current) {
+          setTicket(null);
+          return;
+        }
+        if (
+          current._id !== ticket?._id ||
+          current.status !== ticket?.status ||
+          current.messages?.length !== ticket?.messages?.length
+        ) {
+          setTicket(current);
+        }
+      } catch {
+        /* تجاهل أخطاء التحديث التلقائي */
+      }
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [isOpen, ticket?._id, ticket?.status, ticket?.messages?.length]);
 
   const send = async () => {
     const message = draft.trim();
@@ -58,11 +102,12 @@ const Support = () => {
     setSending(true);
     setError('');
     try {
-      const updated = isOpen ? await replyTicket({ message }) : await createTicket({ subject, message });
+      const updated = isOpen ? await replyTicket({ message }) : await createTicket({ subject, message, priority });
       setTicket(updated);
       setDraft('');
       if (!isOpen) {
         setSubject('');
+        setPriority('medium');
         await load();
       }
     } catch (err) {
@@ -91,7 +136,7 @@ const Support = () => {
       </div>
 
       {/* الشات */}
-      <div className="dash-in rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden flex flex-col h-[560px]">
+      <div className="dash-in rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden flex flex-col h-[calc(100dvh-13rem)] min-h-[420px] sm:h-[560px]">
         {/* رأس الشات */}
         <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10 bg-white/[0.02]">
           <div className="flex items-center gap-3 min-w-0">
@@ -110,15 +155,30 @@ const Support = () => {
             </div>
           </div>
           {ticket && (
-            <span
-              className={`text-[10px] font-bold rounded-full px-2.5 py-1 border ${
-                isOpen
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
-                  : 'border-gray-500/30 bg-gray-500/10 text-gray-400'
-              }`}
-            >
-              {isOpen ? t('dashboard.support.statusOpen') : t('dashboard.support.statusClosed')}
-            </span>
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-[10px] font-bold rounded-full px-2.5 py-1 border ${
+                  ticket.priority === 'urgent'
+                    ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                    : ticket.priority === 'high'
+                      ? 'border-orange-500/30 bg-orange-500/10 text-orange-300'
+                      : ticket.priority === 'medium'
+                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
+                        : 'border-gray-500/30 bg-gray-500/10 text-gray-400'
+                }`}
+              >
+                {t(PRIORITY_KEY[ticket.priority] || PRIORITY_KEY.medium)}
+              </span>
+              <span
+                className={`text-[10px] font-bold rounded-full px-2.5 py-1 border ${
+                  isOpen
+                    ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
+                    : 'border-gray-500/30 bg-gray-500/10 text-gray-400'
+                }`}
+              >
+                {isOpen ? t('dashboard.support.statusOpen') : t('dashboard.support.statusClosed')}
+              </span>
+            </div>
           )}
         </div>
 
@@ -170,13 +230,39 @@ const Support = () => {
             </p>
           )}
 
-          {!ticket && (
-            <input
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder={t('dashboard.support.subjectPlaceholder')}
-              className="w-full mb-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#8b151a]/60"
-            />
+          {(!ticket || !isOpen) && (
+            <div className="mb-3 space-y-2">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder={t('dashboard.support.subjectPlaceholder')}
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#8b151a]/60"
+                />
+                <div className="w-full sm:w-64">
+                  <label className="block text-[11px] font-bold text-gray-400 mb-1.5">
+                    {t('dashboard.support.priorityLabel')}
+                  </label>
+                  <select
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                    style={SELECT_DARK_STYLE}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#8b151a]/60"
+                  >
+                    {PRIORITY_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value} style={OPTION_STYLE}>
+                        {`${t(opt.labelKey)} — ${t(opt.shortKey)}`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <p className="text-[11px] leading-relaxed text-gray-400 bg-white/[0.03] border border-white/5 rounded-lg px-3 py-2">
+                <span className="font-bold text-gray-300">
+                  {t(PRIORITY_OPTIONS.find((o) => o.value === priority)?.descKey || PRIORITY_OPTIONS[1].descKey)}
+                </span>
+              </p>
+            </div>
           )}
 
           <div className="flex items-end gap-3">
@@ -186,16 +272,16 @@ const Support = () => {
               onKeyDown={onKeyDown}
               rows={1}
               placeholder={isOpen || !ticket ? t('dashboard.support.inputPlaceholder') : t('dashboard.support.closedInput')}
-              disabled={ticket && !isOpen}
+              disabled={sending}
               className="flex-1 resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#8b151a]/60 disabled:opacity-50 max-h-32"
             />
             <button
               type="button"
               onClick={send}
-              disabled={sending || !draft.trim() || (ticket && !isOpen)}
+              disabled={sending || !draft.trim()}
               className="shrink-0 rounded-xl bg-gradient-to-l from-[#8b151a] to-[#ef4444] px-5 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-40"
             >
-              {sending ? t('dashboard.support.sending') : ticket && !isOpen ? t('dashboard.support.closedBtn') : t('dashboard.support.send')}
+              {sending ? t('dashboard.support.sending') : t('dashboard.support.send')}
             </button>
           </div>
         </div>
@@ -212,9 +298,24 @@ const Support = () => {
                   <p className="text-xs font-bold text-white truncate" dir="ltr">{h.ticketCode}</p>
                   <p className="text-[11px] text-gray-500 truncate">{h.subject || h.lastMessagePreview || '—'}</p>
                 </div>
-                <span className="text-[10px] font-bold rounded-full px-2.5 py-1 border border-gray-500/30 bg-gray-500/10 text-gray-400">
-                  {h.status === 'open' ? t('dashboard.support.statusOpen') : t('dashboard.support.statusClosed')}
-                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[10px] font-bold rounded-full px-2.5 py-1 border border-gray-500/30 bg-gray-500/10 text-gray-400">
+                    {h.status === 'open' ? t('dashboard.support.statusOpen') : t('dashboard.support.statusClosed')}
+                  </span>
+                  <span
+                    className={`text-[10px] font-bold rounded-full px-2.5 py-1 border ${
+                      h.priority === 'urgent'
+                        ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                        : h.priority === 'high'
+                          ? 'border-orange-500/30 bg-orange-500/10 text-orange-300'
+                          : h.priority === 'medium'
+                            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
+                            : 'border-gray-500/30 bg-gray-500/10 text-gray-400'
+                    }`}
+                  >
+                    {t(PRIORITY_KEY[h.priority] || PRIORITY_KEY.medium)}
+                  </span>
+                </div>
               </div>
             ))}
           </div>

@@ -18,8 +18,8 @@ export const getMyTickets = async () => {
 };
 
 // فتح تیکت جديد (رسالة أولى اختيارية مع موضوع)
-export const createTicket = async ({ subject, message }) => {
-  const res = await apiClient.post('/support/tickets', { subject, message });
+export const createTicket = async ({ subject, message, priority = 'medium' }) => {
+  const res = await apiClient.post('/support/tickets', { subject, message, priority });
   return res.data?.data?.ticket;
 };
 

@@ -63,10 +63,16 @@ export function LanguageProvider({ children }) {
   }, []);
 
   const t = useCallback(
-    (path) => {
+    (path, params) => {
       if (!path) return '';
       const value = resolve(dictionaries[lang], path);
-      return value === undefined ? path : value;
+      if (value === undefined) return path;
+      if (params && typeof params === 'object') {
+        return String(value).replace(/\{(\w+)\}/g, (match, key) => {
+          return params[key] !== undefined ? String(params[key]) : '';
+        });
+      }
+      return value;
     },
     [lang]
   );
